@@ -27,12 +27,13 @@ public class InteractionHandler {
 		final Player player = event.getEntity();
 		final ItemStack stack = event.getItemStack();
 		final Entity entity = event.getTarget();
-		if (event.getItemStack().getItem() instanceof DyeItem dyeItem) {
+		if (event.getItemStack().getItem() instanceof DyeItem dyeItem &&
+				!level.isClientSide && entity.isAlive()) {
 			final DyeColor dyeColor = dyeItem.getDyeColor();
 
 			if (!(entity instanceof Sheep)) {
 				IMobColor mobColor = entity.getCapability(CapabilityHandler.COLOR_CAPABILITY).orElse(null);
-				if (!level.isClientSide && entity.isAlive() && mobColor.getColor() != dyeColor) {
+				if (mobColor != null && mobColor.getColor() != dyeColor) {
 					level.playSound(player, entity, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
 
 					if (entity instanceof Wolf wolf && wolf.isOwnedBy(player)) {
