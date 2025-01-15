@@ -11,6 +11,7 @@ import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.item.DyeColor;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -20,6 +21,7 @@ import java.lang.ref.WeakReference;
 
 @Mixin(SlimeOuterLayer.class)
 public class SlimeOuterLayerMixin<T extends LivingEntity> {
+	@Unique
 	private static WeakReference<ColorReference> dyeMobDye$colorReference = new WeakReference<>(null);
 
 	@Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V",
