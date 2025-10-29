@@ -10,6 +10,6 @@ import java.util.function.Supplier;
 public class AttachmentHandler {
 	public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, DyeMobDye.MOD_ID);
 	public static final Supplier<AttachmentType<DyeColor>> COLOR = ATTACHMENT_TYPES.register("color", () ->
-			AttachmentType.builder(() -> DyeColor.WHITE).serialize(DyeColor.CODEC).sync(DyeColor.STREAM_CODEC).build()
+			AttachmentType.builder(() -> DyeColor.WHITE).serialize(DyeColor.CODEC.fieldOf("color")).sync(DyeColor.STREAM_CODEC).build()
 	);
 }

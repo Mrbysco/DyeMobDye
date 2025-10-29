@@ -5,8 +5,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
@@ -36,12 +37,17 @@ public class InteractionHandler {
 							wolf.setCollarColor(dyeColor);
 						}
 					}
+					if (entity instanceof Cat cat && cat.isOwnedBy(player)) {
+						if (cat.getCollarColor() != dyeColor) {
+							cat.setCollarColor(dyeColor);
+						}
+					}
 
 					entity.setData(AttachmentHandler.COLOR, dyeColor);
 					entity.syncData(AttachmentHandler.COLOR);
 					if (!player.getAbilities().instabuild)
 						stack.shrink(1);
-					event.setCancellationResult(InteractionResult.sidedSuccess(false));
+					event.setCancellationResult(InteractionResult.SUCCESS_SERVER);
 				}
 			}
 		}
