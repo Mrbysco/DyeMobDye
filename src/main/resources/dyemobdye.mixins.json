@@ -5,8 +5,6 @@
   "package": "com.mrbysco.dyemobdye.mixin",
   "refmap": "dyemobdye.refmap.json",
   "target": "@env(DEFAULT)",
-  "mixins": [
-  ],
   "client": [
     "LivingEntityRendererMixin",
     "RenderLayerMixin",
