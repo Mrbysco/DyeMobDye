@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[46,)"
+loaderVersion="[4,)"
 issueTrackerURL="https://github.com/Mrbysco/DyeMobDye/issues"
 license="MIT"
 
@@ -14,7 +14,15 @@ DYE MOB DYEEEEEE!
 '''
 [[dependencies.dyemobdye]]
 modId="minecraft"
-mandatory=true
-versionRange="[1.20,1.21)"
+type="required"
+versionRange="[1.21,1.22)"
 ordering="NONE"
 side="BOTH"
+[[dependencies.dyemobdye]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.1,)"
+ordering="NONE"
+side="BOTH"
+[[mixins]]
+config="dyemobdye.mixins.json"

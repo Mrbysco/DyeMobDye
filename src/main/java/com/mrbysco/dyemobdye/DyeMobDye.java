@@ -2,31 +2,25 @@ package com.mrbysco.dyemobdye;
 
 import com.mojang.logging.LogUtils;
 import com.mrbysco.dyemobdye.handler.InteractionHandler;
-import com.mrbysco.dyemobdye.networking.PacketHandler;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
 @Mod(DyeMobDye.MOD_ID)
 public class DyeMobDye {
 	public static final String MOD_ID = "dyemobdye";
 	public static final Logger LOGGER = LogUtils.getLogger();
-	public static final ResourceLocation COLOR_CAP = new ResourceLocation(MOD_ID, "capability.color");
+	public static final ResourceLocation COLOR_CAP = modLoc("capability.color");
 
-	public DyeMobDye() {
-		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public DyeMobDye(IEventBus eventBus) {
+		AttachmentHandler.ATTACHMENT_TYPES.register(eventBus);
 
-		eventBus.addListener(this::setup);
-
-		MinecraftForge.EVENT_BUS.register(new InteractionHandler());
-		MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
+		NeoForge.EVENT_BUS.register(new InteractionHandler());
 	}
 
-	private void setup(final FMLCommonSetupEvent event) {
-		PacketHandler.init();
+	public static ResourceLocation modLoc(String name) {
+		return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
 	}
 }

@@ -1,9 +1,7 @@
 package com.mrbysco.dyemobdye.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mrbysco.dyemobdye.CapabilityHandler;
-import com.mrbysco.dyemobdye.capability.IMobColor;
-import com.mrbysco.dyemobdye.client.ColorReference;
+import com.mrbysco.dyemobdye.AttachmentHandler;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,28 +19,17 @@ import java.lang.ref.WeakReference;
 @Mixin(LivingEntityRenderer.class)
 public class LivingEntityRendererMixin<T extends LivingEntity> {
 	@Unique
-	private static WeakReference<ColorReference> dyeMobDye$colorReference = new WeakReference<>(null);
+	private static WeakReference<Integer> dyeMobDye$colorReference = new WeakReference<>(null);
 
 	@Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
 			at = @At(value = "HEAD"))
-	public <T extends LivingEntity> void dyemobdye_getColors(T entity, float p_115309_, float p_115310_, PoseStack p_115311_, MultiBufferSource p_115312_, int p_115313_, CallbackInfo ci) {
-		IMobColor mobColor = entity.getCapability(CapabilityHandler.COLOR_CAPABILITY).orElse(null);
-		if (!(entity instanceof Sheep) && mobColor != null) {
-			DyeColor dyeColor = mobColor.getColor();
-			float r;
-			float g;
-			float b;
-			if (dyeColor == DyeColor.WHITE) {
-				r = 1.0F;
-				g = 1.0F;
-				b = 1.0F;
-			} else {
-				float[] colorArray = Sheep.getColorArray(dyeColor);
-				r = colorArray[0];
-				g = colorArray[1];
-				b = colorArray[2];
-			}
-			dyeMobDye$colorReference = new WeakReference<>(new ColorReference(r, g, b));
+	public void dyemobdye$getColors(T entity, float entityYaw, float partialTicks,
+	                                PoseStack poseStack, MultiBufferSource buffer,
+	                                int packedLight, CallbackInfo ci) {
+		if (!(entity instanceof Sheep)) {
+			DyeColor dyeColor = entity.getData(AttachmentHandler.COLOR);
+			int color = dyeColor == DyeColor.WHITE ? -1 : Sheep.getColor(dyeColor);
+			dyeMobDye$colorReference = new WeakReference<>(color);
 		} else {
 			dyeMobDye$colorReference = new WeakReference<>(null);
 		}
@@ -51,44 +38,14 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
 	@ModifyArg(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFF)V"
+					target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"
 			),
 			index = 4
 	)
-	public float dyemobdye_changeRed(float red) {
+	public int dyemobdye$changeColor(int color) {
 		if (dyeMobDye$colorReference.get() != null) {
-			return dyeMobDye$colorReference.get().red();
+			return dyeMobDye$colorReference.get();
 		}
-		return red;
-	}
-
-	@ModifyArg(
-			method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFF)V"
-			),
-			index = 5
-	)
-	public float dyemobdye_changeGreen(float green) {
-		if (dyeMobDye$colorReference.get() != null) {
-			return dyeMobDye$colorReference.get().green();
-		}
-		return green;
-	}
-
-	@ModifyArg(
-			method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFF)V"
-			),
-			index = 6
-	)
-	public float dyemobdye_changeBlue(float blue) {
-		if (dyeMobDye$colorReference.get() != null) {
-			return dyeMobDye$colorReference.get().blue();
-		}
-		return blue;
+		return color;
 	}
 }
