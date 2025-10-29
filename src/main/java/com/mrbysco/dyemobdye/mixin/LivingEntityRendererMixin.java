@@ -26,7 +26,7 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
 	public void dyemobdye$getColors(T entity, float entityYaw, float partialTicks,
 	                                PoseStack poseStack, MultiBufferSource buffer,
 	                                int packedLight, CallbackInfo ci) {
-		if (!(entity instanceof Sheep)) {
+		if (!(entity instanceof Sheep) && entity.hasData(AttachmentHandler.COLOR)) {
 			DyeColor dyeColor = entity.getData(AttachmentHandler.COLOR);
 			int color = dyeColor == DyeColor.WHITE ? -1 : Sheep.getColor(dyeColor);
 			dyeMobDye$colorReference = new WeakReference<>(color);
