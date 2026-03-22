@@ -3,7 +3,7 @@ package com.mrbysco.dyemobdye;
 import com.mojang.logging.LogUtils;
 import com.mrbysco.dyemobdye.client.ClientHandler;
 import com.mrbysco.dyemobdye.handler.InteractionHandler;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -25,7 +25,7 @@ public class DyeMobDye {
 		}
 	}
 
-	public static ResourceLocation modLoc(String name) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
+	public static Identifier modLoc(String name) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, name);
 	}
 }
