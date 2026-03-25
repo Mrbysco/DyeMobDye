@@ -1,6 +1,7 @@
 package com.mrbysco.dyemobdye.handler;
 
 import com.mrbysco.dyemobdye.AttachmentHandler;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -23,9 +24,10 @@ public class InteractionHandler {
 		final Player player = event.getEntity();
 		final ItemStack stack = event.getItemStack();
 		final Entity entity = event.getTarget();
-		if (event.getItemStack().getItem() instanceof DyeItem dyeItem &&
+		if (stack.has(DataComponents.DYE) &&
 				!level.isClientSide() && entity.isAlive()) {
-			final DyeColor dyeColor = dyeItem.getDyeColor();
+			final DyeColor dyeColor = stack.get(DataComponents.DYE);
+			assert dyeColor != null;
 
 			if (!(entity instanceof Sheep)) {
 				DyeColor mobColor = entity.getData(AttachmentHandler.COLOR);
